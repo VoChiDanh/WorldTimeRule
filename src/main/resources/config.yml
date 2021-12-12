@@ -1,0 +1,11 @@
+world: world
+messagenight: '&f&l[&e&lBan đêm&f&l] &bChết có mất đồ, hãy cẩn thận!'
+messageday: '&f&l[&e&lBan ngày&f&l] &bChết không mất đồ.'
+messagecanhbao: '&c&lCòn &e&l{giay} &c&lgiây chuyển qua non-keep.'
+title: '&d&lBan đêm'
+subtitle: '&e&lChết có mất đồ, về nhà núp thôi...'
+fadein: 10
+stay: 20
+fadeout: 40
+reload: "&bĐã tải lại config"
+

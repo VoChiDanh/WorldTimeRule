@@ -1,0 +1,10 @@
+name: '${project.name}'
+version: '${project.version}'
+main: net.danh.worldtimerule.WorldTimeRule
+api-version: 1.13
+authors: [VoChiDanh]
+commands:
+ wtrreload:
+  usage: /<command>
+  descripsion: Reload
+
