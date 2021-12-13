@@ -1,7 +1,6 @@
 package net.danh.worldtimerule;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -16,15 +15,20 @@ import java.util.List;
 import java.util.logging.Level;
 
 public final class WorldTimeRule extends JavaPlugin {
+
+
+    public boolean isnight = false;
+
     @Override
     public void onEnable() {
         getCommand("wtrreload").setExecutor(new Command(this));
         createConfigs();
-        (new BukkitRunnable() {
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             public void run() {
                 if (getConfig().getString("world") != null) {
-                    if (getServer().getWorld(getConfig().getString("world")).getTime() >= 0L && getServer().getWorld(getConfig().getString("world")).getTime() < 13700L) {
-                        getServer().getWorld(getConfig().getString("world")).setGameRule(GameRule.KEEP_INVENTORY, true);
+                    if (isnight && getServer().getWorld(getConfig().getString("world")).getTime() >= 0L && getServer().getWorld(getConfig().getString("world")).getTime() < 13700L) {
+                        isnight = false;
+                        getServer().getWorld(getConfig().getString("world")).setGameRuleValue("keepInventory", "true");
                         Iterator var2 = Bukkit.getOnlinePlayers().iterator();
                         while (var2.hasNext()) {
                             Player p = (Player) var2.next();
@@ -34,8 +38,9 @@ public final class WorldTimeRule extends JavaPlugin {
                     }
 
 
-                    } else if (getServer().getWorld(getConfig().getString("world")).getTime() >= 13700L) {
-                        getServer().getWorld(getConfig().getString("world")).setGameRule(GameRule.KEEP_INVENTORY, false);
+                    } else if (!isnight && getServer().getWorld(getConfig().getString("world")).getTime() >= 13700L) {
+                    isnight = true;
+                        getServer().getWorld(getConfig().getString("world")).setGameRuleValue("keepInventory", "false");
                         Iterator var2 = Bukkit.getOnlinePlayers().iterator();
                         while (var2.hasNext()) {
                             Player p = (Player) var2.next();
@@ -43,7 +48,7 @@ public final class WorldTimeRule extends JavaPlugin {
                             p.sendTitle(convert(getConfig().getString("title")), convert(getConfig().getString("subtitle")), getConfig().getInt("fadein"), getConfig().getInt("stay"), getConfig().getInt("fadeout"));
                         }
                     }
-                    if (getServer().getWorld(getConfig().getString("world")).getTime() >= 13500L){
+                    if (!isnight && getServer().getWorld(getConfig().getString("world")).getTime() >= 13500L){
                         int giaycon = (int)((13700L - getServer().getWorld(getConfig().getString("world")).getTime()) / 20L) + 1;
                         if (giaycon == 10) {
 
@@ -55,7 +60,7 @@ public final class WorldTimeRule extends JavaPlugin {
                     }
                 }
             }
-        }).runTaskTimer(this, 20L, 20L);
+        }, 20L, 20L);
     }
 
 
